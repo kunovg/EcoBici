@@ -202,7 +202,7 @@ def analyze_trips_by_moments_for_day(days, intervalo):
 
         print('Analizando datos del día {}'.format(day))
         result[day.strftime('%Y-%m-%d')] = {tiempos[t]: len(df_year.between_time(tiempos[t], tiempos[t+1]).index)
-                        for t in range(len(tiempos)-1)}
+                                            for t in range(len(tiempos)-1)}
 
     with open('data/trips_during_days.json', 'w') as file:
         json.dump(result, file)
@@ -239,3 +239,13 @@ def analyze_trips_by_moments_day_station(day, station, intervalo):
         result[tiempos[t]] = {'salidas': len(salidas), 'llegadas': len(llegadas)}
     with open('data/trips_{}_station_{}.json'.format(day.strftime('%Y-%m-%d'), station), 'w') as file:
         json.dump(result, file)
+
+def bicycle_data(bicycle_id):
+    print('Leyendo viajes de la bicicleta {}'.format(bicycle_id))
+    trips = m.s.query(m.Trip).filter_by(bicycle_id=bicycle_id)
+    df = pd.read_sql(trips.statement, trips.session.bind).sort_values(by='departure_time')
+    return {
+        'first_trip': df['departure_time'].iloc[0],
+        'last_trip': df['departure_time'].iloc[-1],
+        'total': len(df),
+    }
