@@ -159,7 +159,7 @@ def analyze_trips_by_moments(weekday, intervalo, years):
         trips_per_year = m.s.query(m.Trip).filter(and_(
             m.Trip.departure_time >= '{}-01-01 00:00:00'.format(year),
             m.Trip.departure_time <= '{}-12-31 23:59:59'.format(year),
-            func.to_char(m.Trip.departure_time, 'ID') == str(weekday+1)
+            func.to_char(m.Trip.departure_time, 'ID') == str(weekday+1)  # En SQL van de 1 a 7
         ))
         df_year = pd.read_sql(trips_per_year.statement, trips_per_year.session.bind)
 
