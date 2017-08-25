@@ -240,6 +240,21 @@ def analyze_trips_by_moments_day_station(day, station, intervalo):
     with open('data/trips_{}_station_{}.json'.format(day.strftime('%Y-%m-%d'), station), 'w') as file:
         json.dump(result, file)
 
+def most_common_trips(weekday, year):
+    """ Los viajes más comunes en cierto weekday """
+    def stations(s1, s2):
+        return '{}-{}'.format(s1, s2) if s1 < s2 else '{}-{}'.format(s2, s1)
+
+    print('Leyendo datos weekday: {}\taño: {}'.format(weekday, year))
+    trips = m.s.query(m.Trip).filter(and_(
+        m.Trip.departure_time >= '{}-01-01 00:00:00'.format(year),
+        m.Trip.departure_time <= '{}-12-31 23:59:59'.format(year),
+        func.to_char(m.Trip.departure_time, 'ID') == str(weekday+1)  # En SQL van de 1 a 7
+    ))
+    df = pd.read_sql(trips.statement, trips.session.bind)
+    df['stations'] = df.apply(lambda row: stations(row['departure_station'], row['arrival_station']), axis=1)
+    return df['stations'].value_counts()
+
 def bicycle_data(bicycle_id):
     print('Leyendo viajes de la bicicleta {}'.format(bicycle_id))
     trips = m.s.query(m.Trip).filter_by(bicycle_id=bicycle_id)
