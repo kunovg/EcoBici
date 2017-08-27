@@ -259,8 +259,12 @@ def bicycle_data(bicycle_id):
     print('Leyendo viajes de la bicicleta {}'.format(bicycle_id))
     trips = m.s.query(m.Trip).filter_by(bicycle_id=bicycle_id)
     df = pd.read_sql(trips.statement, trips.session.bind).sort_values(by='departure_time')
+    if len(df) == 0:
+        return {}
+    df['trip_length'] = df.apply(lambda row: (row['arrival_time'] - row['departure_time']).total_seconds(), axis=1)
     return {
         'first_trip': df['departure_time'].iloc[0],
         'last_trip': df['departure_time'].iloc[-1],
-        'total': len(df),
+        'total_time': df['trip_length'].sum(),
+        'total_trips': len(df),
     }
