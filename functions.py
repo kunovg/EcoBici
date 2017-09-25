@@ -9,6 +9,11 @@ def weekday_name(weekday):
     days = ['Lunes', 'Martes', 'Miercoles', 'Jueves', 'Viernes', 'Sabado', 'Domingo']
     return days[weekday]
 
+def get_stations():
+    s = m.s.query(m.Station)
+    df = pd.read_sql(s.statement, s.session.bind)
+    return df
+
 def analyze_departures_by_station(years, stations):
     """ Numero de salidas por estación durante un año """
     for year in years:
