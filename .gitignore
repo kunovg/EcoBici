@@ -43,4 +43,5 @@ __pycache__/*
 # Specific routes and files #
 #############################
 script de oro.py
+dummy_relaciones_viajes.json
 data/*
