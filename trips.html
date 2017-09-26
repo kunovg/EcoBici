@@ -12,11 +12,38 @@
   #map {
     height: 100%;
   }
+  #floating-panel {
+    position: absolute;
+    top: 10px;
+    left: 25%;
+    z-index: 5;
+    background-color: #fff;
+    padding: 5px;
+    border: 1px solid #999;
+    text-align: center;
+    font-family: 'Roboto','sans-serif';
+    line-height: 30px;
+    padding-left: 10px;
+  }
+  #grad1 {
+    height: 20px;
+    width: 600px;
+    background: -webkit-linear-gradient(left, #00ffff, #00ff5b, #00ff00, #5bff00, #c6ff00, #ffc600, #ff5b00, #ff0000, #c30000); /* For Safari 5.1 to 6.0 */
+  }
+  .left{float: left;}
+  .right{float: right;}
+  .inline{display: inline;}
   </style>
 </head>
 <body>
+    <div id="floating-panel">
+      <div id="grad1"></div>
+      <div class="left">200</div>
+      <div class="inline">Viajes al año</div>
+      <div class="right">2400</div>
+    </div>
     <div id="map"></div>
-    <script type="text/javascript" src="./dummy_relaciones_viajes.json"></script>
+    <script type="text/javascript" src="data/common_trips.json"></script>
     <!-- Replace the value of the key parameter with your own API key. -->
     <script async defer
             src="https://maps.googleapis.com/maps/api/js?key=AIzaSyAGXdnlF6ta_6jP9jA4OP0HWurvuHyybPA&libraries=visualization&callback=initMap">
@@ -288,20 +315,44 @@
         ]
       });
 
-      var trips = JSON.parse(data).trips;
+      colors = [
+        "#00ffff",
+        "#00ffc6",
+        "#00ff90",
+        "#00ff5b",
+        "#00ff2a",
+        "#00ff00",
+        "#2aff00",
+        "#5bff00",
+        "#90ff00",
+        "#c6ff00",
+        "#ffff00",
+        "#ffc600",
+        "#ff9000",
+        "#ff5b00",
+        "#ff2a00",
+        "#ff0000",
+        "#c30000"
+      ]
+
+      trips = trips.sort(function(a, b) {
+        return parseInt(a.total) - parseInt(b.total);
+      });
 
       for(var i=0;i<trips.length; i++){
         var obj = trips[i];
+        if(parseInt(obj.total) <= 200) continue;
+        var weight = Math.floor(parseInt(obj.total) / 275)
 
         new google.maps.Polyline({
           path: [
-              new google.maps.LatLng(obj.point1[0], obj.point1[1]), 
-              new google.maps.LatLng(obj.point2[0], obj.point2[1])
+              new google.maps.LatLng(parseFloat(obj.point1[0]), parseFloat(obj.point1[1])), 
+              new google.maps.LatLng(parseFloat(obj.point2[0]), parseFloat(obj.point2[1]))
           ],
-          strokeColor: "#FF0000",
+          strokeColor: colors[weight*2],
           strokeOpacity: 1.0,
-          strokeWeight: obj.weight,
-          map: map
+          strokeWeight: weight*0.5,
+          map: map 
         });
       }
 
