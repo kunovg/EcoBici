@@ -40,10 +40,9 @@ __pycache__/*
 */__pycache__/*
 *.txt
 .pep8
+*.ipynb
 
 # Specific routes and files #
 #############################
 script de oro.py
-dummy_relaciones_viajes.json
 data/*
-Bicycle Analisis.ipynb
