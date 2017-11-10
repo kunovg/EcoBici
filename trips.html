@@ -332,16 +332,17 @@
         "#ff5b00",
         "#ff2a00",
         "#ff0000",
-        "#c30000"
+        "#ff0000"
       ]
 
-      trips = trips.sort(function(a, b) {
-        return parseInt(a.total) - parseInt(b.total);
-      });
+      // trips = trips.sort(function(a, b) {
+      //   return parseInt(a.total) - parseInt(b.total);
+      // });
 
+      console.log(trips.length)
       for(var i=0;i<trips.length; i++){
         var obj = trips[i];
-        if(parseInt(obj.total) <= 200) continue;
+        if(parseInt(obj.total) <= 300) continue;
         var weight = Math.floor(parseInt(obj.total) / 275)
 
         new google.maps.Polyline({
@@ -351,7 +352,7 @@
           ],
           strokeColor: colors[weight*2],
           strokeOpacity: 1.0,
-          strokeWeight: weight*0.5,
+          strokeWeight: Math.max(weight*0.5, 1),
           map: map 
         });
       }

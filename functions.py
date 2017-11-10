@@ -273,3 +273,39 @@ def bicycle_data(bicycle_id):
         'total_time': df['trip_length'].sum(),
         'total_trips': len(df),
     }
+
+def analyze_trips_by_moments_week_station(day, station, intervalo):
+    """ Numero de viajes por lapsos durante toda una semana para cierta estación"""
+    def generate_time_lapse(intervalo):
+        """ Regresa un array de strings en formato %H:%M """
+        delta = dt.timedelta(minutes=intervalo)  # 1440 minutos en un día
+        start = dt.datetime.now().replace(hour=0, minute=0)
+        tiempos = [(start + i * delta).strftime('%H:%M') for i in range(int(1440 / intervalo))]
+        tiempos.append('23:59:59')  # Para que no exista un overlapping con el primer intervalo
+        return tiempos
+
+    tiempos, result = generate_time_lapse(intervalo), {}
+    start, end = day.replace(hour=0, minute=0, second=0), day.replace(hour=23, minute=59, second=59) + dt.timedelta(days=7)
+
+    # Leer todos los viajes de X estación durante Y día
+    print('Leyendo datos de la semana {} estación {}'.format(day, station))
+    trips_per_year = m.s.query(m.Trip).filter(and_(
+        m.Trip.departure_time >= start,
+        m.Trip.departure_time <= end)).filter(or_(
+            m.Trip.departure_station == station,
+            m.Trip.arrival_station == station
+        ))
+    df = pd.read_sql(trips_per_year.statement, trips_per_year.session.bind)
+
+    # Set DatetimeIndex
+    df.set_index('departure_time', inplace=True)
+
+    for dia in range(7):
+        result[str(dia)] = {}
+        df2 = df.ix[(day + dt.timedelta(days=dia)).strftime('%Y-%m-%d'):(day + dt.timedelta(days=dia)).strftime('%Y-%m-%d')]
+        for t in range(len(tiempos)-1):
+            salidas = df2[df2.departure_station == station].between_time(tiempos[t], tiempos[t+1]).index
+            llegadas = df2[df2.arrival_station == station].between_time(tiempos[t], tiempos[t+1]).index
+            result[str(dia)][tiempos[t]] = {'salidas': len(salidas), 'llegadas': len(llegadas)}
+    with open('data/trips_week_{}_station_{}.json'.format(day.strftime('%Y-%m-%d'), station), 'w') as file:
+        json.dump(result, file)
