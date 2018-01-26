@@ -46,3 +46,4 @@ __pycache__/*
 #############################
 script de oro.py
 data/*
+script_upload_to_server.py

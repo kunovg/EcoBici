@@ -2,7 +2,7 @@
 import json
 import pandas as pd
 import models as m
-from sqlalchemy import and_, func, or_
+from sqlalchemy import and_, func, or_, extract
 import datetime as dt
 
 def weekday_name(weekday):
@@ -309,3 +309,12 @@ def analyze_trips_by_moments_week_station(day, station, intervalo):
             result[str(dia)][tiempos[t]] = {'salidas': len(salidas), 'llegadas': len(llegadas)}
     with open('data/trips_week_{}_station_{}.json'.format(day.strftime('%Y-%m-%d'), station), 'w') as file:
         json.dump(result, file)
+
+def trips_by_hour(hour, year, exclude_days=['6', '7']):
+    trips = m.s.query(m.Trip).filter(and_(
+        hour == extract('hour', m.Trip.departure_time),
+        m.Trip.departure_time >= '{}-01-01 00:00:00'.format(year),
+        m.Trip.departure_time <= '{}-12-31 23:59:59'.format(year),
+        ~func.to_char(m.Trip.departure_time, 'ID').in_(exclude_days)
+    ))
+    return pd.read_sql(trips.statement, trips.session.bind)
