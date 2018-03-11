@@ -318,3 +318,16 @@ def trips_by_hour(hour, year, exclude_days=['6', '7']):
         ~func.to_char(m.Trip.departure_time, 'ID').in_(exclude_days)
     ))
     return pd.read_sql(trips.statement, trips.session.bind)
+
+def trips_between_minutes(h1, m1, h2, m2, year, exclude_days=['6', '7']):
+    """ Returns trips in a year, during specific times"""
+    trips = m.s.query(m.Trip).filter(and_(
+        extract('hour', m.Trip.departure_time) >= h1,
+        extract('minute', m.Trip.departure_time) >= m1,
+        extract('hour', m.Trip.departure_time) <= h2,
+        extract('minute', m.Trip.departure_time) <= m2,
+        m.Trip.departure_time >= '{}-01-01 00:00:00'.format(year),
+        m.Trip.departure_time <= '{}-12-31 23:59:59'.format(year),
+        ~func.to_char(m.Trip.departure_time, 'ID').in_(exclude_days)
+    ))
+    return pd.read_sql(trips.statement, trips.session.bind)

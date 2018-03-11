@@ -40,7 +40,6 @@ __pycache__/*
 */__pycache__/*
 *.txt
 .pep8
-*.ipynb
 
 # Specific routes and files #
 #############################
