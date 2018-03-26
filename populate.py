@@ -5,6 +5,7 @@ import models as m
 from ecobici import EcobiciManager
 # from datetime import datetime as dt
 from dateutil import parser
+from tqdm import tqdm
 
 
 config = m.config
@@ -26,7 +27,7 @@ def read_csv(filename):
     f = open(filename)
     reader = csv.reader(f)
     next(reader)  # No leer los headers
-    for row in reader:
+    for row in tqdm(reader):
         if row[2].isdigit():
             trip = m.Trip(gender=row[0],
                           age=row[1],
@@ -40,9 +41,9 @@ def read_csv(filename):
     f.close()
 
 if __name__ == "__main__":
-    print('insertando estaciones')
-    insert_stations()
-    print('estaciones insertadas')
+    # print('insertando estaciones')
+    # insert_stations()
+    # print('estaciones insertadas')
 
     files = []
     os.chdir("C:/Users/kuno/Documents/dataEcobici")

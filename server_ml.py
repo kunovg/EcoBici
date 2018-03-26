@@ -12,7 +12,7 @@ from sklearn.preprocessing import MinMaxScaler
 from sklearn.preprocessing import StandardScaler
 from sklearn.metrics import mean_squared_error
 from sklearn.metrics import mean_absolute_error
-epochs = [10, 30, 50, 100, 200]
+epochs = [30, 50, 100, 200]
 for epoch in epochs:
     # Load data
     train = pd.read_csv('trips_train_3.csv', header=None)
@@ -52,7 +52,7 @@ for epoch in epochs:
 
     # Define the LSTM model
     model = Sequential()
-    model.add(LSTM(input_shape=(window_size,1), output_dim=window_size, return_sequences=True))
+    model.add(LSTM(input_shape=(window_size, 1), output_dim=window_size, return_sequences=True))
     model.add(Dropout(0.5))
     model.add(LSTM(256))
     model.add(Dropout(0.5))
@@ -85,6 +85,7 @@ for epoch in epochs:
         return preds_moving
 
     preds_moving = moving_test_window_preds(500)
+    actuals = scaler.inverse_transform(test_y.reshape(-1, 1))
     mse = mean_squared_error(actuals[74:150], preds_moving[74:150])
     mae = mean_absolute_error(actuals[74:150], preds_moving[74:150])
 
@@ -92,3 +93,23 @@ for epoch in epochs:
     with open('f_%s_%s_%s.txt' % (epoch, mse, mae), 'w') as f:
         for i in preds_moving:
             f.write("%s\n" % i)
+
+def moving_test_window_preds(n_future_preds):
+
+    ''' n_future_preds - Represents the number of future predictions we want to make
+                         This coincides with the number of windows that we will move forward
+                         on the test data
+    '''
+    preds_moving = []                                    # Use this to store the prediction made on each test window
+    moving_test_window = [test_X[0,:].tolist()]          # Creating the first test window
+    moving_test_window = np.array(moving_test_window)    # Making it an numpy array
+
+    for i in range(n_future_preds):
+        preds_one_step = model.predict(moving_test_window) # Note that this is already a scaled prediction so no need to rescale this
+        preds_moving.append(preds_one_step[0,0]) # get the value from the numpy 2D array and append to predictions
+        preds_one_step = preds_one_step.reshape(1,1,1) # Reshaping the prediction to 3D array for concatenation with moving test window
+        moving_test_window = np.concatenate((moving_test_window[:,1:,:], preds_one_step), axis=1) # This is the new moving test window, where the first element from the window has been removed and the prediction  has been appended to the end
+
+    preds_moving = scaler.inverse_transform(np.array(preds_moving).reshape(-1, 1))
+
+    return preds_moving
