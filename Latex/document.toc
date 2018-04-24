@@ -1,0 +1,10 @@
+\select@language {spanish}
+\contentsline {section}{\numberline {1}Sistemas de bicicletas compartidas en el mundo}{5}
+\contentsline {subsection}{\numberline {1.1}Problemas de los BSS}{6}
+\contentsline {subsection}{\numberline {1.2}Ecobici}{8}
+\contentsline {section}{\numberline {2}Clustering}{16}
+\contentsline {subsection}{\numberline {2.1}K Means}{16}
+\contentsline {subsection}{\numberline {2.2}Affinity Propagation}{18}
+\contentsline {section}{\numberline {3}Redes neuronales}{20}
+\contentsline {subsection}{\numberline {3.1}Algoritmo de Backpropagation}{22}
+\contentsline {subsection}{\numberline {3.2}LSTM}{24}
