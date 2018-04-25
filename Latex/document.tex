@@ -256,7 +256,7 @@
 		\item $w^l_jk$ es el \textit{weight} que va de la neurona $j$ en la capa $l-1$ hacia la neurona $k$ en la capa $l$
 		\item $a^l_j$ es la salida o activación de la neurona $j$ en la capa $l$.
 	\end{itemize}
-		
+
 	\begin{figure}[H]
 		\centering
 		\includegraphics[width=10cm]{Imagenes/neural_network_nomenclature.png}
@@ -285,8 +285,36 @@
 		\item Propagar hacia las capas anteriores este error usando (BP2).
 		\item Modificar los valores de w y a usando \textbf{\textit{gradient descent}} y las ecuaciones (BP3) y (BP4)
 	\end{enumerate}
-	\subsection{LSTM}
-	En la sección anterior se mostró como entrenar una red neuronal, pero en las figuras se puede observar que se trataba de una red neuronal simple, en la que a partir de un valor de entrada se obtiene uno a la salida. Hay casos en los que se necesita un contexto para definir este valor a la salida y este tipo de redes no es útil, ya que se necesita una retroalimentación.
+	\subsection{Recurrent Neural Networks}
+	El tipo de redes que se mostró al inicio de esta sección son llamadas \textit{Feedforward Networks} por el modo que funcionan; se insertan datos y en un flujo en una sola dirección estos datos son convertidos en información. No tiene relevancia el orden en que se muestren los datos.\\
+	\begin{figure}[H]
+		\centering
+		\includegraphics[width=10cm]{Imagenes/rnn_structure.png}
+		\begin{centering}
+			\caption{Estructura básica de una Red Neuronal Recurrente}
+		\end{centering}
+	\end{figure}
+	En el caso que sea importante la secuencia en la que se insertan los datos existen las llamadas \textit{Recurrent Neural Networks} (RNN). Estas guardan un estado que refleje el flujo histórico de los datos y lo utilizan como retroalimentación. A este estado se le va a llamar \textit{hidden state} y será denotado con $h_t$ donde t es un momento en el tiempo. La ecuación que define a este estado es la siguiente:
+	\[ h_t = \phi (Wx_t + Uh_{t-1}) \]
+	Donde $h_t$ es el \textit{hidden state} en el tiempo $t$, $\phi$ es una función que puede ser sigmoide o $tanh$, $W$ es la matriz de \textit{weights}, $X_t$ es el vector de entrada en el tiempo t, $U$ es la matriz de transición (lo mismo que \textit{weights} pero para $h$) y $h_{t-1}$ es el vector de hidden states anteriores. \\
+	Este tipo de redes utiliza una variación del algoritmo de \textit{Backpropagation} para su entrenamiento conocido como \textit{Backpropagation Through Time} (BPTT), la variación es que debe expandir la función de retroalimentación n veces antes de calcular $y$.
+	\begin{figure}[H]
+		\centering
+		\includegraphics[width=10cm]{Imagenes/bptt.png}
+		\begin{centering}
+			\caption{Algoritmo de BPTT}
+		\end{centering}
+	\end{figure}
+	El problema que surge con este tipo de redes es que es muy difícil conocer la importancia de un suceso muy remoto porque la información puede pasar por muchas operaciones y se puede ir reduciendo, haciendo muy lento el aprendizaje ya que los cambios son mínimos. Para resolver este problema surgen las llamadas \textbf{\textit{Long Short Term Memory Networks}} (LSTM).
+	\begin{figure}[H]
+		\centering
+		\includegraphics[width=10cm]{Imagenes/sigmoid_vanishing_gradient.png}
+		\begin{centering}
+			\caption{Efectos de aplicar una función sigmoide múltiples veces}
+		\end{centering}
+	\end{figure}
+	
+
 	
 	\newpage	
 	\begin{thebibliography}{9}

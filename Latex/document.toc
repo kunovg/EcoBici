@@ -7,4 +7,4 @@
 \contentsline {subsection}{\numberline {2.2}Affinity Propagation}{18}
 \contentsline {section}{\numberline {3}Redes neuronales}{20}
 \contentsline {subsection}{\numberline {3.1}Algoritmo de Backpropagation}{22}
-\contentsline {subsection}{\numberline {3.2}LSTM}{24}
+\contentsline {subsection}{\numberline {3.2}Recurrent Neural Networks}{24}
