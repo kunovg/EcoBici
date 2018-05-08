@@ -230,8 +230,10 @@
 	\end{figure}
 	\newpage
 	\section{Redes neuronales}
-	Como se mencionó en la primer sección de este documento, es necesario tener una buena predicción sobre el tráfico en el sistema. Algunos autores han propuesto utilizar redes neuronales tipo LSTM para modelar estos problemas [Zhao et. al]. Pero antes es necesario explicar qué es una red neuronal y porqué es factible resolver este tipo de problemas usándolas.\\
-	Las redes neuronales son sistemas computacionales diseñados para que por medio de un entrenamiento en base a valores de entrada y sus respectivos valores de salida sean capaces de ``aprender'' una función $ y = y(x) $.\\
+	Como se mencionó en la primer sección de este documento, es necesario tener una buena predicción sobre el tráfico en el sistema. Algunos autores han propuesto utilizar redes neuronales para modelar estos problemas [Zhao et. al]. Pero antes es necesario explicar qué es una red neuronal y porqué es factible resolver este tipo de problemas usándolas.\\
+	Las redes neuronales son sistemas computacionales diseñados para que por medio de un entrenamiento en base a valores de entrada y sus respectivos valores de salida sean capaces de ``aprender'' una función $ y = y(x) $. Para el entrenamiento se necesita definir \textit{epochs} y tamaño del \textit{batch}.\\
+	Un \textit{epoch} es recorrer toda la información de entrenamiento, así a mayor número de epochs se recorre más veces la información de entrenamiento. Un bajo número de epochs puede significar que la red no aprenda la función, por el contrario un número alto puede traer problemas de sobreajuste, siendo incapaz la red de reaccionar a información nueva.\\
+	Un \textit{batch} o lote, es una parte de la información de entrenamiento. Entre más grande sea el lote es mayor la memoria computacional necesaria, un número bajo implica mayor número de iteraciones para completar un \textit{epoch}. Por ejemplo si se tienen 1000 ejemplos de entrenamiento y un tamaño de lote de 500 se necesitan 2 iteraciones para completar un \textit{epoch}.\\
 	Las redes neuronales están formadas por neuronas artificiales que simulan la conexión dentro un cerebro, donde las neuronas conectadas unas con otras generan enlaces que pueden incrementar o disminuir el estado de activación de las neuronas circundantes. 
 	\begin{figure}[H]
 		\centering
@@ -313,7 +315,58 @@
 			\caption{Efectos de aplicar una función sigmoide múltiples veces}
 		\end{centering}
 	\end{figure}
-	
+	\subsection{LSTM}
+	Son un tipo de red que permite el aprendizaje incluso con más de 1000 pasos en el tiempo. Almacenan información dentro una celda, fuera del flujo normal de la red. En esta se puede escribir y leer información por medio de compuertas implementadas con la función sigmoide. Al igual que las neuronas, bloquean o permiten pasar cantidades de información dependiendo de sus propios \textit{weights}, así las celdas aprenden cuándo permitir que la información sea escrita o leída. El siguiente diagrama representa el funcionamiento de una LSTM.\\
+	\begin{figure}[H]
+		\centering
+		\includegraphics[width=10cm]{Imagenes/lstm_structure.png}
+		\begin{centering}
+			\caption{Representación de una LSTM}
+		\end{centering}
+	\end{figure}
+	La información del \textit{input} llega por debajo, se le aplica una funcion de aplastamiento como $tanh$. Posteriormente es multiplicada por la información que ya contenía la celda. Se actualiza la información de la celda en cada paso del tiempo, las compuertas pueden decidir que tanto olvidar, escribir o leer de la información.
+	\subsection{Implementación de una LSTM para predicción de demanda}
+	Una vez que se conocen las bases de una red neuronal, es fácil notar porque estas se pueden utilizar para predicción. La función de demanda a través del tiempo en el BSS de Ecobici resultaría imposible de determinar, pero puede aproximarse con una LSTM.\\
+	*Aquí va la descripción de la red*\\
+	A continuación se presentan las predicciones de la red para diferente número de \textit{epochs}, en naranja es lo predicho por la red y azul las demandas reales. Cabe recalcar que no hubo una retroalimentación en la predicción para estas gráficas, esto quiere decir que lo predicho por la red no se utilizó para predecir el siguiente paso, en cambio se utilizaron solo los últimos 78 momentos reales.
+	\begin{figure}[H]
+		\centering
+		\includegraphics[width=15cm]{Imagenes/full_30_epochs.PNG}
+		\begin{centering}
+			\caption{Red con 30 epochs de entrenamiento prediciendo demanda para todo el sistema}
+		\end{centering}
+	\end{figure}
+	\begin{figure}[H]
+		\centering
+		\includegraphics[width=15cm]{Imagenes/full_50_epochs.PNG}
+		\begin{centering}
+			\caption{Red con 50 epochs de entrenamiento prediciendo demanda para todo el sistema}
+		\end{centering}
+	\end{figure}
+	\begin{figure}[H]
+		\centering
+		\includegraphics[width=15cm]{Imagenes/full_200_epochs.PNG}
+		\begin{centering}
+			\caption{Red con 200 epochs de entrenamiento prediciendo demanda para todo el sistema}
+		\end{centering}
+	\end{figure}
+	Si el mismo modelo es utilizado para predecir un día completo con retroalimentación de la red se obtiene el siguiente resultado. Esto significa que cada predicción que va haciendo la red se vuelve a insertar en el vector \textit{input} para predecir el siguiente paso
+	\begin{figure}[H]
+		\centering
+		\includegraphics[width=15cm]{Imagenes/model_predict_1_day.PNG}
+		\begin{centering}
+			\caption{Predicción de casi un día con retroalimentación de la red}
+		\end{centering}
+	\end{figure}
+	Estos son buenos resultados, en cambio si se quiere utilizar el mismo modelo para predecir la demanda en el cluster de Buenavista es notorio que difieren los resultados reales con los predichos.
+	\begin{figure}[H]
+		\centering
+		\includegraphics[width=15cm]{Imagenes/model_predict_buenavista_cluster.PNG}
+		\begin{centering}
+			\caption{Predicción usando el modelo de todo el sistema para predecir solo un cluster}
+		\end{centering}
+	\end{figure}
+
 
 	
 	\newpage	

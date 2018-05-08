@@ -1,18 +1,24 @@
 \select@language {spanish}
-\contentsline {figure}{\numberline {1}{\ignorespaces Viajes por semana de Ecobici}}{9}
-\contentsline {figure}{\numberline {2}{\ignorespaces Estaciones con mayor actividad durante los \IeC {\'u}ltimos 3 a\IeC {\~n}os}}{9}
-\contentsline {figure}{\numberline {3}{\ignorespaces Suma de llegadas y salidas en el 2016 por estaci\IeC {\'o}n}}{10}
-\contentsline {figure}{\numberline {4}{\ignorespaces Diferencia entre salidas y llegadas en el 2016 por estaci\IeC {\'o}n}}{10}
-\contentsline {figure}{\numberline {5}{\ignorespaces Mapa de calor por llegadas y salidas de los \IeC {\'u}ltimos 3 a\IeC {\~n}os}}{11}
-\contentsline {figure}{\numberline {6}{\ignorespaces Viajes al a\IeC {\~n}o entre 2 estaciones}}{12}
-\contentsline {figure}{\numberline {7}{\ignorespaces Viajes por d\IeC {\'\i }a de la semana}}{13}
-\contentsline {figure}{\numberline {8}{\ignorespaces N\IeC {\'u}mero de viajes en d\IeC {\'\i }as laborales del 2016}}{14}
-\contentsline {figure}{\numberline {9}{\ignorespaces Flujo neto (llegadas - salidas) para diferentes martes en la estaci\IeC {\'o}n 27}}{15}
-\contentsline {figure}{\numberline {10}{\ignorespaces K means con 16 clusters}}{17}
-\contentsline {figure}{\numberline {11}{\ignorespaces K means con 3 clusters usando posicion y llegadas - salidas}}{18}
-\contentsline {figure}{\numberline {12}{\ignorespaces Affinity Propagation genera 16 clusters}}{19}
-\contentsline {figure}{\numberline {13}{\ignorespaces Estructura de una red nueronal simple}}{20}
-\contentsline {figure}{\numberline {14}{\ignorespaces Nomenclatura b\IeC {\'a}sica de una red neuronal}}{22}
-\contentsline {figure}{\numberline {15}{\ignorespaces Estructura b\IeC {\'a}sica de una Red Neuronal Recurrente}}{25}
-\contentsline {figure}{\numberline {16}{\ignorespaces Algoritmo de BPTT}}{26}
-\contentsline {figure}{\numberline {17}{\ignorespaces Efectos de aplicar una funci\IeC {\'o}n sigmoide m\IeC {\'u}ltiples veces}}{26}
+\contentsline {figure}{\numberline {1}{\ignorespaces Viajes por semana de Ecobici}}{10}
+\contentsline {figure}{\numberline {2}{\ignorespaces Estaciones con mayor actividad durante los \IeC {\'u}ltimos 3 a\IeC {\~n}os}}{10}
+\contentsline {figure}{\numberline {3}{\ignorespaces Suma de llegadas y salidas en el 2016 por estaci\IeC {\'o}n}}{11}
+\contentsline {figure}{\numberline {4}{\ignorespaces Diferencia entre salidas y llegadas en el 2016 por estaci\IeC {\'o}n}}{11}
+\contentsline {figure}{\numberline {5}{\ignorespaces Mapa de calor por llegadas y salidas de los \IeC {\'u}ltimos 3 a\IeC {\~n}os}}{12}
+\contentsline {figure}{\numberline {6}{\ignorespaces Viajes al a\IeC {\~n}o entre 2 estaciones}}{13}
+\contentsline {figure}{\numberline {7}{\ignorespaces Viajes por d\IeC {\'\i }a de la semana}}{14}
+\contentsline {figure}{\numberline {8}{\ignorespaces N\IeC {\'u}mero de viajes en d\IeC {\'\i }as laborales del 2016}}{15}
+\contentsline {figure}{\numberline {9}{\ignorespaces Flujo neto (llegadas - salidas) para diferentes martes en la estaci\IeC {\'o}n 27}}{16}
+\contentsline {figure}{\numberline {10}{\ignorespaces K means con 16 clusters}}{18}
+\contentsline {figure}{\numberline {11}{\ignorespaces K means con 3 clusters usando posicion y llegadas - salidas}}{19}
+\contentsline {figure}{\numberline {12}{\ignorespaces Affinity Propagation genera 16 clusters}}{20}
+\contentsline {figure}{\numberline {13}{\ignorespaces Estructura de una red nueronal simple}}{22}
+\contentsline {figure}{\numberline {14}{\ignorespaces Nomenclatura b\IeC {\'a}sica de una red neuronal}}{24}
+\contentsline {figure}{\numberline {15}{\ignorespaces Estructura b\IeC {\'a}sica de una Red Neuronal Recurrente}}{26}
+\contentsline {figure}{\numberline {16}{\ignorespaces Algoritmo de BPTT}}{27}
+\contentsline {figure}{\numberline {17}{\ignorespaces Efectos de aplicar una funci\IeC {\'o}n sigmoide m\IeC {\'u}ltiples veces}}{28}
+\contentsline {figure}{\numberline {18}{\ignorespaces Representaci\IeC {\'o}n de una LSTM}}{29}
+\contentsline {figure}{\numberline {19}{\ignorespaces Red con 30 epochs de entrenamiento prediciendo demanda para todo el sistema}}{30}
+\contentsline {figure}{\numberline {20}{\ignorespaces Red con 50 epochs de entrenamiento prediciendo demanda para todo el sistema}}{30}
+\contentsline {figure}{\numberline {21}{\ignorespaces Red con 200 epochs de entrenamiento prediciendo demanda para todo el sistema}}{30}
+\contentsline {figure}{\numberline {22}{\ignorespaces Predicci\IeC {\'o}n de casi un d\IeC {\'\i }a con retroalimentaci\IeC {\'o}n de la red}}{31}
+\contentsline {figure}{\numberline {23}{\ignorespaces Predicci\IeC {\'o}n usando el modelo de todo el sistema para predecir solo un cluster}}{31}
