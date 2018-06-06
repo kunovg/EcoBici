@@ -3,10 +3,12 @@
 \contentsline {subsection}{\numberline {1.1}Problemas de los BSS}{7}
 \contentsline {subsection}{\numberline {1.2}Ecobici}{9}
 \contentsline {section}{\numberline {2}Clustering}{17}
-\contentsline {subsection}{\numberline {2.1}K Means}{17}
-\contentsline {subsection}{\numberline {2.2}Affinity Propagation}{19}
-\contentsline {section}{\numberline {3}Redes neuronales}{21}
-\contentsline {subsection}{\numberline {3.1}Algoritmo de Backpropagation}{23}
-\contentsline {subsection}{\numberline {3.2}Recurrent Neural Networks}{26}
-\contentsline {subsection}{\numberline {3.3}LSTM}{28}
-\contentsline {subsection}{\numberline {3.4}Implementaci\IeC {\'o}n de una LSTM para predicci\IeC {\'o}n de demanda}{29}
+\contentsline {subsection}{\numberline {2.1}K Means}{18}
+\contentsline {subsection}{\numberline {2.2}Affinity Propagation}{20}
+\contentsline {section}{\numberline {3}Redes neuronales}{22}
+\contentsline {subsection}{\numberline {3.1}Algoritmo de Backpropagation}{24}
+\contentsline {subsection}{\numberline {3.2}Recurrent Neural Networks}{27}
+\contentsline {subsection}{\numberline {3.3}LSTM}{29}
+\contentsline {subsection}{\numberline {3.4}Implementaci\IeC {\'o}n de una LSTM para predicci\IeC {\'o}n de demanda}{30}
+\contentsline {section}{\numberline {4}Predicci\IeC {\'o}n de demanda para los clusters}{33}
+\contentsline {section}{\numberline {5}Conclusi\IeC {\'o}n y posibles mejoras}{35}

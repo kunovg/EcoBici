@@ -20,7 +20,6 @@
 \usepackage{fancyhdr}  % para los headers
 \usepackage{color}  % Para los colores
 \usepackage{listings}  % Para poner los codigos
-\usepackage{subfigure}  % Para unir varias imagenes en una solo Fig
 \usepackage{multicol}  % Para multicolumnass
 \usepackage{epstopdf}  % Para convertir imagenes eps a pdf
 \usepackage{wrapfig}  % Para poner figuras al lado del texto
@@ -32,6 +31,7 @@
 \usepackage{booktabs}                                        % Para cambiar aspecto de las lineas horizon de las tablas
 \usepackage{fixltx2e}					%Para subindices y superindices
 \usepackage{gensymb}				%Para símbolos especiales
+\usepackage{subfig}  % Para varias figuras en una linea
 \renewcommand{\baselinestretch}{2}						 	 % Interlineado del documento
 \newfloatcommand{capbtabbox}{table}[][\FBwidth]
 %===========================================================================================================================
@@ -49,7 +49,7 @@
 		\vspace{2.5cm}
 		
 		%{\small REPORTE 1}\\[0.5cm]
-		{\LARGE\textbf{Diseño de una red neuronal para clasificación de estaciones en un sistema de bicicletas compartidas}}\\[1.6cm]
+		{\LARGE\textbf{Diseño de una red neuronal para pronóstico de demanda en un sistema de bicicletas compartidas}}\\[1.6cm]
 		{\normalsize Tesina que para obtener el título de :}\\[0.1cm]
 		{\large  \textbf{Ingeniero Industrial}}\\[2.1cm]
 		{\normalsize Presenta: }\\[0.1cm]
@@ -198,40 +198,76 @@
 	\end{figure}
 	\newpage
 	\section{Clustering}
-	Consiste an agrupar elementos dependiendo de sus similaridades. Tarea que resulta muy útil al separar las estaciones de Ecobici de acuerdo a un criterio. Así resultaría más fácil analizar una sola estación que represente a un grupo en lugar de analizar las 452 estaciones por separado. Hay diversos métodos para separar por clusters, se utilizarán 3 métodos y se compararán resultados.
+	Consiste an agrupar elementos dependiendo de sus similaridades, el objetivo es que los datos dentro de un grupo sean similares entre sí y diferentes de los datos de otros grupos (Tan et. al., 2006).	Así resultará más fácil analizar grupos de estaciones en lugar de las 452 estaciones por separado.\\
+	Vogel (2011) sugiere utilizar la actividad por estación para realizar el agrupamiento, en este caso se utilizará el número total de viajes en el año 2016 excluyendo fines de semana. A esta sugerencia se añaden las coordenadas de la estación, ya que para objetivos de este trabajo es necesario que las estaciones se encuentren cerca. Los datos pueden visualizarse en las siguientes figuras.\\
+	\begin{figure}[H]%
+		\centering
+		\subfloat[Vista superior]{{\includegraphics[width=7cm]{Imagenes/datos3d_1.PNG} }}%
+		\qquad
+		\subfloat[Perspectiva isométrica]{{\includegraphics[width=7cm]{Imagenes/datos3d_2.PNG} }}%
+		\caption{Datos a agrupar}%
+		\label{fig:example}%
+	\end{figure}
+
+	Tan et. al. (2006) sugiere comparar los resultados de diversos métodos de agrupamiento para diferentes números de clusters.
+	
 	\subsection{K Means}
-	Algoritmo usado para dividir n observaciones en k grupos de manera que cada grupo tenga una varianza mínima entre sus observaciones. Se puede describir por la siguiente ecuación:\\
-	*Ecuacion con errores sintacticos en Latex*
-	Se utilizó la librería de Python Scikit para generar clusters de las estaciones dependiendo de su posición geográfica
+	Algoritmo usado para dividir n observaciones en k grupos de manera que cada grupo tenga una varianza mínima entre sus observaciones. El algoritmo consta de los siguientes pasos:
+	\begin{enumerate}
+		\item \textbf{Asignación.} Cada dato es asignado al centroide más cercano de acuerdo a la distancia euclidiana.
+		\item \textbf{Actualización.} Los centroides son recalculados de acuerdo al promedio de sus datos respectivos.
+	\end{enumerate}
+	El algoritmo itera en estos dos pasos hasta que se llega al criterio de finalización (i.e., ningún dato cambia de grupo, la suma de distancias se ha minimizado, número máximo de iteraciones).\\\\
+	No hay un algoritmo universal para escoger k, pero hay varios métodos que sugieren k, uno de ellos es el criterio del codo (\textit{elbow method} en inglés). Como Kassambara (2017) sugiere, la suma de cuadrados de los cluster debe ser mínima, pero hay un punto en el que el cambio comienza a ser mínimo, formando un ``codo" si se grafica la suma de cuadrados para n clusters. A partir de este punto el impacto de aumentar k disminuye considerablemente.
 	\begin{figure}[H]
 		\centering
-		\includegraphics[width=15cm]{Imagenes/kmeans_16.png}
+		\includegraphics[width=10cm]{Imagenes/kmeans_elbow.png}
 		\begin{centering}
-			\caption{K means con 16 clusters}
+			\caption{Suma de cuadrados para k clusters con el codo indicado}
 		\end{centering}
 	\end{figure}
-	Estos clusters se formaron en base a ubicación geográfica. Qué sucede si añadimos otros factores como salidas y llegadas?
-	*Debo hacer algo con los viajes para que se generen mejores clusters*
-	\begin{figure}[H]
+	Este criterio arroja como resultado $k=10$ y los clusters se ven de la siguiente manera:
+	\begin{figure}[H]%
 		\centering
-		\includegraphics[width=15cm]{Imagenes/kmeans_3.png}
-		\begin{centering}
-			\caption{K means con 3 clusters usando posicion y llegadas - salidas}
-		\end{centering}
+		\subfloat[Vista superior]{{\includegraphics[width=7cm]{Imagenes/kmeans_10_1.PNG} }}%
+		\qquad
+		\subfloat[Perspectiva isométrica]{{\includegraphics[width=7cm]{Imagenes/kmeans_10_2.PNG} }}%
+		\caption{Agrupación por k means usando k=10}%
+		\label{fig:example}%
 	\end{figure}
+	Es importante recalcar que $k=10$ es un punto subjetivo a partir del cual el cambio en la suma de cuadrados total es mínima, esto no significa que una elección de k mayor a 10 sea mala.
 	\subsection{Affinity Propagation}
-	Elige los clusters dependiendo del número de observaciones.
+	Es otro método de agrupación que funciona en base a un intercambio de mensajes entre los puntos (Brendan, 2017). Este método no necesita que sea indicado el número de clusters a diferencia de \textbf{K means}.\\
+	El algoritmo consiste en ver todos los puntos como una red, y transmitir mensajes valorados a través de ella. Los mensajes son actualizados en base a fórmulas que buscan el mínimo de una función de energía apropiada. El mensaje representa la afinidad que tiene un punto para relacionarse con otro. Hay 2 funciones para representar esto; la función de "responsabilidad" que refleja la evidencia acumulada para indicar que tan adecuado es el punto $i$ con $k$; la otra función es de "disponibilidad" que representa que tan apropiado es para el punto $k$ relacionarse con $i$ de acuerdo a la evidencia acumulada que ha tenido $k$ con otros puntos. Se generan iteraciones hasta que converge a un resultado.
 	\begin{figure}[H]
 		\centering
-		\includegraphics[width=15cm]{Imagenes/ap_16.png}
+		\includegraphics[width=15cm]{Imagenes/ap_funcionamiento.png}
 		\begin{centering}
-			\caption{Affinity Propagation genera 16 clusters}
+			\caption{Ilustración de como gradualmente affinity propagation converge a un resultado. Imagen tomada del paper de Brendan (2017)}
 		\end{centering}
+	\end{figure}
+	Este algoritmo indica que son 22 grupos, los resultados se indican en la siguiente figura
+	\begin{figure}[H]%
+		\centering
+		\subfloat[Vista superior]{{\includegraphics[width=7cm]{Imagenes/ap_22_1.PNG} }}%
+		\qquad
+		\subfloat[Perspectiva isométrica]{{\includegraphics[width=7cm]{Imagenes/ap_22_2.PNG} }}%
+		\caption{22 clusters generados con affinity propagation}%
+		\label{fig:example}%
+	\end{figure}
+	Como era de esperarse los resultados difieren del algoritmo de k means, incluso si se utiliza $k=22$ los resultados no son iguales. Pero esto sugiere que puede usarse un número mayor de clusters, por lo que se aumentará a 14 el valor de $k$ para generar los clusters para usar en lo que resta de este trabajo.
+	\begin{figure}[H]%
+		\centering
+		\subfloat[Vista superior]{{\includegraphics[width=7cm]{Imagenes/kmeans_14_1.PNG} }}%
+		\qquad
+		\subfloat[Perspectiva isométrica]{{\includegraphics[width=7cm]{Imagenes/kmeans_14_2.PNG} }}%
+		\caption{14 clusters generados con k means}%
+		\label{fig:example}%
 	\end{figure}
 	\newpage
 	\section{Redes neuronales}
-	Como se mencionó en la primer sección de este documento, es necesario tener una buena predicción sobre el tráfico en el sistema. Algunos autores han propuesto utilizar redes neuronales para modelar estos problemas [Zhao et. al]. Pero antes es necesario explicar qué es una red neuronal y porqué es factible resolver este tipo de problemas usándolas.\\
-	Las redes neuronales son sistemas computacionales diseñados para que por medio de un entrenamiento en base a valores de entrada y sus respectivos valores de salida sean capaces de ``aprender'' una función $ y = y(x) $. Para el entrenamiento se necesita definir \textit{epochs} y tamaño del \textit{batch}.\\
+	Como se mencionó en la primer sección de este documento, es necesario tener una buena predicción sobre el tráfico en el sistema. Algunos autores han propuesto utilizar redes neuronales para modelar estos problemas [Zhao et. al, 2017]. Pero antes es necesario explicar qué es una red neuronal y porqué es factible resolver este tipo de problemas usándolas.\\
+	Las redes neuronales son sistemas computacionales diseñados para que por medio de un entrenamiento en base a valores de entrada y sus respectivos valores de salida sean capaces de ``aprender'' una función $ y = f(x) $ [Nielsen, 2015]. Para el entrenamiento se necesita definir \textit{epochs} y tamaño del \textit{batch}.\\
 	Un \textit{epoch} es recorrer toda la información de entrenamiento, así a mayor número de epochs se recorre más veces la información de entrenamiento. Un bajo número de epochs puede significar que la red no aprenda la función, por el contrario un número alto puede traer problemas de sobreajuste, siendo incapaz la red de reaccionar a información nueva.\\
 	Un \textit{batch} o lote, es una parte de la información de entrenamiento. Entre más grande sea el lote es mayor la memoria computacional necesaria, un número bajo implica mayor número de iteraciones para completar un \textit{epoch}. Por ejemplo si se tienen 1000 ejemplos de entrenamiento y un tamaño de lote de 500 se necesitan 2 iteraciones para completar un \textit{epoch}.\\
 	Las redes neuronales están formadas por neuronas artificiales que simulan la conexión dentro un cerebro, donde las neuronas conectadas unas con otras generan enlaces que pueden incrementar o disminuir el estado de activación de las neuronas circundantes. 
@@ -293,7 +329,7 @@
 		\centering
 		\includegraphics[width=10cm]{Imagenes/rnn_structure.png}
 		\begin{centering}
-			\caption{Estructura básica de una Red Neuronal Recurrente}
+			\caption{Estructura básica de una Red Neuronal Recurrente. Imagen tomada de  Servan-Schreiber et al. (1991)}
 		\end{centering}
 	\end{figure}
 	En el caso que sea importante la secuencia en la que se insertan los datos existen las llamadas \textit{Recurrent Neural Networks} (RNN). Estas guardan un estado que refleje el flujo histórico de los datos y lo utilizan como retroalimentación. A este estado se le va a llamar \textit{hidden state} y será denotado con $h_t$ donde t es un momento en el tiempo. La ecuación que define a este estado es la siguiente:
@@ -304,7 +340,7 @@
 		\centering
 		\includegraphics[width=10cm]{Imagenes/bptt.png}
 		\begin{centering}
-			\caption{Algoritmo de BPTT}
+			\caption{Algoritmo de BPTT. Imagen tomada de Backpropagation through time - Wikipedia}
 		\end{centering}
 	\end{figure}
 	El problema que surge con este tipo de redes es que es muy difícil conocer la importancia de un suceso muy remoto porque la información puede pasar por muchas operaciones y se puede ir reduciendo, haciendo muy lento el aprendizaje ya que los cambios son mínimos. Para resolver este problema surgen las llamadas \textbf{\textit{Long Short Term Memory Networks}} (LSTM).
@@ -312,7 +348,7 @@
 		\centering
 		\includegraphics[width=10cm]{Imagenes/sigmoid_vanishing_gradient.png}
 		\begin{centering}
-			\caption{Efectos de aplicar una función sigmoide múltiples veces}
+			\caption{Efectos de aplicar una función sigmoide múltiples veces. Imagen tomada de Recurrent neural network - Wikipedia}
 		\end{centering}
 	\end{figure}
 	\subsection{LSTM}
@@ -321,10 +357,10 @@
 		\centering
 		\includegraphics[width=10cm]{Imagenes/lstm_structure.png}
 		\begin{centering}
-			\caption{Representación de una LSTM}
+			\caption{Representación de una LSTM. Imagen tomada de Understanding LSTM Networks - Colah's blog}
 		\end{centering}
 	\end{figure}
-	La información del \textit{input} llega por debajo, se le aplica una funcion de aplastamiento como $tanh$. Posteriormente es multiplicada por la información que ya contenía la celda. Se actualiza la información de la celda en cada paso del tiempo, las compuertas pueden decidir que tanto olvidar, escribir o leer de la información.
+	La información del \textit{input} llega por debajo, se le aplica una función de aplastamiento como $tanh$. Posteriormente es multiplicada por la información que ya contenía la celda. Se actualiza la información de la celda en cada paso del tiempo, las compuertas pueden decidir que tanto olvidar, escribir o leer de la información.
 	\subsection{Implementación de una LSTM para predicción de demanda}
 	Una vez que se conocen las bases de una red neuronal, es fácil notar porque estas se pueden utilizar para predicción. La función de demanda a través del tiempo en el BSS de Ecobici resultaría imposible de determinar, pero puede aproximarse con una LSTM.\\
 	*Aquí va la descripción de la red*\\
@@ -350,7 +386,7 @@
 			\caption{Red con 200 epochs de entrenamiento prediciendo demanda para todo el sistema}
 		\end{centering}
 	\end{figure}
-	Si el mismo modelo es utilizado para predecir un día completo con retroalimentación de la red se obtiene el siguiente resultado. Esto significa que cada predicción que va haciendo la red se vuelve a insertar en el vector \textit{input} para predecir el siguiente paso
+	Si el mismo modelo es utilizado para predecir un día completo con retroalimentación de la red se obtiene el siguiente resultado. Esto significa que cada pronóstico que va haciendo la red se vuelve a insertar en el vector \textit{input} para predecir el siguiente paso
 	\begin{figure}[H]
 		\centering
 		\includegraphics[width=15cm]{Imagenes/model_predict_1_day.PNG}
@@ -366,32 +402,68 @@
 			\caption{Predicción usando el modelo de todo el sistema para predecir solo un cluster}
 		\end{centering}
 	\end{figure}
-
-
-	
+	\newpage
+	\section{Predicción de demanda para los clusters}
+	En las secciones anteriores se muestran los clusters con los que se van a trabajar, así como una buena respuesta de la red neuronal para pronóstico de todo el sistema, por lo que esta sección busca juntar ambos supuestos y predecir la demanda en las próximas horas del clúster. A pesar de que se entrenaron 14 redes, una para cada clúster y epochs de 30, 100 y 200, no se mostrarán los resultados de todos para evitar saturar el documento.\\\\
+	Tomando como ejemplo el cluster 8 formado en las colonias Del Valle, Santa Cruz Atoyac y alrededores el modelo de 50 epochs de entrenamiento parece ser más adecuado si se comparan en base al \textbf{Error cuadrático medio} y \textbf{Error absoluto medio}.
+	\begin{figure}[H]
+		\centering
+		\includegraphics[width=10cm]{Imagenes/m8_many.PNG}
+		\begin{centering}
+			\caption{Redes neuronales del cluster 8 con diferentes epochs}
+		\end{centering}
+	\end{figure}
+	\begin{table}[H]
+		\centering
+		\caption{Métricas para diferentes epochs}
+		\label{my-label}
+		\begin{tabular}{ | l | l | l |}
+			\hline
+			& \multicolumn{2}{|c|}{Métricas}\\ \cline{2-3}
+			& Mean Square Error & Mean Absolute Error \\ \hline
+			30 epochs & 47.86540178954771 & 5.39564008752505\\ \hline
+			50 epochs & 16.52319792382705 & 3.1541734021902084 \\ \hline
+			100 epochs & 18.095638355582725 & 3.2299707897504173 \\ \hline
+			200 epochs & 25.22412443765576 & 3.80746980547905 \\ \hline
+		\end{tabular}
+	\end{table}
+	La figura 27 muestra la predicción inmediata por ventanas de 78 datos, esto es que no hay una retroalimentación de lo predicho. Pero es claro que desde este momento parece que no es suficiente la información que arroja la red. En los picos que se forman a la hora de la salida laboral, los datos obtenidos están hasta un 20\% por debajo del real. Esto es grave especialmente si se considera que es en estos momentos donde resulta crucial tener datos confiables para soportar la carga en todo el sistema.\\
+	Si se quiere predecir en un momento dado las próximas horas se obtiene una función parecida a la real, pero nuevamente parece ser insuficiente para las demandas reales. Por ejemplo, tomando un día aleatorio para ese cluster y se pronostican las próximas 5 horas se obtiene el siguiente resultado:
+	\begin{figure}[H]
+		\centering
+		\includegraphics[width=10cm]{Imagenes/m8_prediction.PNG}
+		\begin{centering}
+			\caption{Predicción de próximas 5 horas para momento aleatorio del cluster 8}
+		\end{centering}
+	\end{figure}
+	Este patrón se repitió para los demás clusters.
+	\newpage
+	\section{Conclusión y posibles mejoras}
+	La red neuronal es capaz de generar un pronóstico de la demanda cercano al real, pero es insuficiente si se considera que la diferencia puede resultar en decenas de bicicletas o espacios desacertados.\\
+	Se pueden realizar muchos cambios que mejoren la precisión de la red, algunos pueden ser:
+	\begin{itemize}
+		\item Añadir como dimensión en la red datos del servicio meteorológico. Como menciona Gebhart (2017) las condiciones climatológicas influyen directamente en la demanda de este tipo de sistemas
+		\item Agrupamiento dinámico. Algunas estaciones parecen comportarse diferente en diversas horas del día.
+		\item Otros métodos de agrupamiento o restricciones de distancia. Hay casos en los que estaciones quedan agrupadas en zonas que parecen lejanas en la realidad.
+	\end{itemize}
+	Considero que no se ha terminado de explorar la opción de pronosticar usando redes neuronales, con algunas mejoras podrían obtenerse resultados más acertados y útiles para los BSS.
 	\newpage	
 	\begin{thebibliography}{9}
-		
-		\bibitem{lamport94}
-		Hazel G. y Miller D. (2007)
-		\textit{Desafíos de las Megaciudades},
-		\underline{http://www.aan.siemens.com/chile/e-brochures/Documents/Desafío sde las Megaciudades - Siemens.pdf}.
-		\bibitem{lamport94}
-		Ahmadreza F., Hampshire R., Lavanya M. y Naveen E. (2017) \textit{An empirical analysis of bike sharing usage and rebalancing: Evidence from Barcelona and Seville},Transportation Research Part A, Elsevier.
-		\bibitem{lamport94}
-		Schuijbroek J., Hampshire R. y Hoeve W. (2013) \textit{Inventory Rebalancing and Vehicle Routing in Bike	Sharing Systems}, Carnegie Mellon University, Estados Unidos.
-		\bibitem{lamport94}
-		Raviv T. y Kolka O. (2013) \textit{Optimal inventory management of a bike-sharing station}, Taylor \& Francis Ltd.
-		\bibitem{lamport94}
-		Gebhart K. y Noland R. (2014) \textit{The impact of weather conditions on bikeshare trips in Washington, DC}, Springer Science+Business Media, Nueva York, Estados Unidos.
-		\bibitem{lamport94}
-		Li Y., Zheng Y., Zhang H. y Chen L. (2014) \textit{Traffic Prediction in a Bike-Sharing System}, Shanghai Jiao Tong University, Shangai, China.
-		\bibitem{lamport94}
-		Paul DeMaio. \textit(consultado en \textit{The bike sharing world map} Julio de 2017 \underline{https://maps.google.com/maps/ms?ie=UTF8\&hl=en\&om=1\&msa=0\&msid=104227318304000014160.00043d80f9456b3416ced\&ll=43.580391,-42.890625\&spn=143.80149,154.6875\&z=1\&source=embed\&dg=feature}
-		\bibitem{lamport94}
-		Estadísticas de Ecobici \textit{Traffic Prediction in a Bike-Sharing System}, Shanghai Jiao Tong University, Shangai, China.
-		\bibitem{lamport94}
-		Zhao Z., Chen W., Wu X., Chen P. y Liu J. \textit{LSTM network: a deep learning approach for short-term traffic forecast}, The Institution of Engineering and Technology.
+		\bibitem{lamport94} Ahmadreza F., Hampshire R., Lavanya M. y Naveen E. (2017) \textit{An empirical analysis of bike sharing usage and rebalancing: Evidence from Barcelona and Seville},Transportation Research Part A, Elsevier.
+		\bibitem{lamport94} Brendan J. y Delbert D. (2007) \textit{Clustering by passing messages between data points}, Science.
+		\bibitem{lamport94} Estadísticas de Ecobici \textit{Traffic Prediction in a Bike-Sharing System}, Shanghai Jiao Tong University, Shangai, China.
+		\bibitem{lamport94} Gebhart K. y Noland R. (2014) \textit{The impact of weather conditions on bikeshare trips in Washington, DC}, Springer Science+Business Media, Nueva York, Estados Unidos.
+		\bibitem{lamport94} Hazel G. y Miller D. (2007) \textit{Desafíos de las Megaciudades}, \underline{http://www.aan.siemens.com/chile/e-brochures/Documents/Desafío sde las Megaciudades - Siemens.pdf}.
+		\bibitem{lamport94} Kasambara A. (2017) \textit{Practical Guide To Cluster Analysis in R}, STHDA.
+		\bibitem{lamport94} Li Y., Zheng Y., Zhang H. y Chen L. (2014) \textit{Traffic Prediction in a Bike-Sharing System}, Shanghai Jiao Tong University, Shangai, China.
+		\bibitem{lamport94} Nielsen M. (2015) \textit{Neural Networks and Deep Learning}, Determination Press.
+		\bibitem{lamport94} Paul DeMaio. \textit(consultado en \textit{The bike sharing world map} Julio de 2017 \underline{https://maps.google.com/maps/ms?ie=UTF8\&hl=en\&om=1\&msa=0\&msid=104227318304000014160.00043d80f9456b3416ced\&ll=43.580391,-42.890625\&spn=143.80149,154.6875\&z=1\&source=embed\&dg=feature}
+		\bibitem{lamport94} Raviv T. y Kolka O. (2013) \textit{Optimal inventory management of a bike-sharing station}, Taylor \& Francis Ltd.
+		\bibitem{lamport94} Schuijbroek J., Hampshire R. y Hoeve W. (2013) \textit{Inventory Rebalancing and Vehicle Routing in Bike	Sharing Systems}, Carnegie Mellon University, Estados Unidos.
+		\bibitem{lamport94} Servan-Schreiber, D., Cleeremans, A., y McClelland, J. L. (1991) \textit{Graded state machines: The representation of temporal contingencies in simple recurrent networks.}, Machine Learning.
+		\bibitem{lamport94} Tan, P.-N., Steinbach, M. y Kumar,V. (2006) \textit{Introduction to Data Mining}, Pearson Addison-Wesley.
+		\bibitem{lamport94} Vogel P., Greiser T., Mattfeld. (2011) \textit{Understanding Bike-Sharing Systems using Data Mining: Exploring Activity Patterns}, Elsevier.
+		\bibitem{lamport94} Zhao Z., Chen W., Wu X., Chen P. y Liu J. (2017) \textit{LSTM network: a deep learning approach for short-term traffic forecast}, The Institution of Engineering and Technology.
 
 	
 	\end{thebibliography}
