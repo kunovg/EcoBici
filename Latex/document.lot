@@ -1,4 +1,6 @@
 \select@language {spanish}
-\contentsline {table}{\numberline {1}{\ignorespaces Viajes m\IeC {\'a}s comunes durante 2016\relax }}{13}
-\contentsline {table}{\numberline {2}{\ignorespaces Viajes por d\IeC {\'\i }a de la semana\relax }}{14}
-\contentsline {table}{\numberline {3}{\ignorespaces M\IeC {\'e}tricas para diferentes epochs\relax }}{33}
+\vspace {\loftsectionbeforeskipamount }\textbf {\relax \fontsize {14.4}{18}\selectfont 1~Sistemas de bicicletas compartidas en el mundo}\vspace {\loftsectionafterskipamount }
+\contentsline {table}{\numberline {1.1}{\ignorespaces Viajes m\IeC {\'a}s comunes durante 2016\relax }}{8}
+\contentsline {table}{\numberline {1.2}{\ignorespaces Viajes por d\IeC {\'\i }a de la semana\relax }}{9}
+\vspace {\loftsectionbeforeskipamount }\textbf {\relax \fontsize {14.4}{18}\selectfont 4~Predicci\IeC {\'o}n de demanda para los clusters}\vspace {\loftsectionafterskipamount }
+\contentsline {table}{\numberline {4.1}{\ignorespaces M\IeC {\'e}tricas para diferentes epochs\relax }}{29}
